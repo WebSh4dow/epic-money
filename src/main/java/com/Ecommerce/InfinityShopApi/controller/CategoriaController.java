@@ -15,12 +15,18 @@ public class CategoriaController {
     @Autowired
     private CategoriaService categoriaService;
 
+    @GetMapping
+    public ResponseEntity<?> list(){
+        return categoriaService.list();
+    }
+
+
     @PostMapping
     public ResponseEntity<Categoria> create(@Valid @RequestBody Categoria categoria, HttpServletResponse response){
         return categoriaService.create(categoria,response);
     }
     @PutMapping("/{id}")
     public Categoria update(@Valid @RequestBody Categoria categoria, @PathVariable Long id){
-        return categoriaService.updateProducts(id, categoria);
+        return categoriaService.updateCategorias(id, categoria);
     }
 }

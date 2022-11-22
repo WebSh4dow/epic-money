@@ -23,7 +23,6 @@ import java.util.List;
 public class ExceptionHandler extends ResponseEntityExceptionHandler {
     @Autowired
     private MessageSource messageSource;
-
     @Override
     protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
         String messageUser = messageSource.getMessage("invalid.message",null, LocaleContextHolder.getLocale());
@@ -31,13 +30,11 @@ public class ExceptionHandler extends ResponseEntityExceptionHandler {
         List<ExceptionErrorMessage>error = Arrays.asList(new ExceptionErrorMessage(messageUser,messageDev));
         return handleExceptionInternal(ex,new ExceptionErrorMessage(messageUser,messageDev),headers,status.BAD_REQUEST,request);
     }
-
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
         List<ExceptionErrorMessage>error = createListError(ex.getBindingResult());
         return handleExceptionInternal(ex,error, headers, status.BAD_REQUEST, request);
     }
-
     @org.springframework.web.bind.annotation.ExceptionHandler({EmptyResultDataAccessException.class })
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ResponseEntity<Object> handleEmptyResultDataAccessException(EmptyResultDataAccessException exception,WebRequest request){
