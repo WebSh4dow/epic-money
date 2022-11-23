@@ -3,6 +3,7 @@ package com.Ecommerce.InfinityShopApi.Exceptionhandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -35,6 +36,16 @@ public class ExceptionHandler extends ResponseEntityExceptionHandler {
         List<ExceptionErrorMessage>error = createListError(ex.getBindingResult());
         return handleExceptionInternal(ex,error, headers, status.BAD_REQUEST, request);
     }
+    @org.springframework.web.bind.annotation.ExceptionHandler({DataIntegrityViolationException.class })
+    public ResponseEntity<Object>handleDataIntegrityViolationException(DataIntegrityViolationException violationException,WebRequest webRequest){
+
+        String messageUser = messageSource.getMessage("recurso.operation.not.permition",null,LocaleContextHolder.getLocale());
+        String messageDev = violationException.toString();
+
+        List<ExceptionErrorMessage> error = Arrays.asList(new ExceptionErrorMessage(messageUser,messageDev));
+        return handleExceptionInternal(violationException,error,new HttpHeaders(),HttpStatus.BAD_REQUEST,webRequest);
+    }
+
     @org.springframework.web.bind.annotation.ExceptionHandler({EmptyResultDataAccessException.class })
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ResponseEntity<Object> handleEmptyResultDataAccessException(EmptyResultDataAccessException exception,WebRequest request){

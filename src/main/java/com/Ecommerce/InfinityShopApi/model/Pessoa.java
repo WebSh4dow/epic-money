@@ -13,6 +13,7 @@ import javax.validation.constraints.Size;
 public class Pessoa {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
+    @Column(name = "id_pessoa")
     private Long id;
 
     @NotNull

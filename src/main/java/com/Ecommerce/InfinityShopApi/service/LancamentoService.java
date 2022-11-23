@@ -21,7 +21,7 @@ public class LancamentoService {
                 (lancamentoList):ResponseEntity.notFound().build();
     }
 
-    public ResponseEntity <Lancamento>findBy(Long id){
+    public ResponseEntity<Lancamento> findBy(Long id){
        Lancamento lancamento = lancamentoRepository.findById(id).get();
        return lancamento!=null ? ResponseEntity.ok().body
                (lancamento):ResponseEntity.notFound().build();
