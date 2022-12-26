@@ -19,8 +19,6 @@ public class CategoriaController {
     public ResponseEntity<?> list(){
         return categoriaService.list();
     }
-
-
     @PostMapping
     public ResponseEntity<Categoria> create(@Valid @RequestBody Categoria categoria, HttpServletResponse response){
         return categoriaService.create(categoria,response);

@@ -33,14 +33,16 @@ public class Lancamento {
 
     private String observacao;
 
+    private boolean ativo;
+
     @Enumerated(EnumType.STRING)
     private Tipolancamento tipolancamento;
 
-    @ManyToOne()
+    @ManyToOne
     @JoinColumn(name = "id_categoria")
     private Categoria categoria;
 
-    @ManyToOne()
+    @ManyToOne
     @JoinColumn(name = "id_pessoa")
     private Pessoa pessoa;
 }
