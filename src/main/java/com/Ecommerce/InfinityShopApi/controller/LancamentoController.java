@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/lancamentos")
@@ -20,7 +21,7 @@ public class LancamentoController {
         return lancamentoService.list();
     }
     @PostMapping
-    public ResponseEntity<Lancamento>save(@RequestBody Lancamento lancamento, HttpServletResponse response){
+    public ResponseEntity<Lancamento>save(@RequestBody @Valid Lancamento lancamento, HttpServletResponse response){
         return lancamentoService.create(lancamento,response);
     }
 

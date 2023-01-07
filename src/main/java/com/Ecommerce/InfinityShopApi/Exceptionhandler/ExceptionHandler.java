@@ -1,5 +1,6 @@
 package com.Ecommerce.InfinityShopApi.Exceptionhandler;
 
+import com.Ecommerce.InfinityShopApi.ExceptionsService.PessoaNotExistOrNotValidException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -55,6 +56,17 @@ public class ExceptionHandler extends ResponseEntityExceptionHandler {
 
         List<ExceptionErrorMessage> error = Arrays.asList(new ExceptionErrorMessage(messageUser,messageDev));
         return handleExceptionInternal(exception,error,new HttpHeaders(),HttpStatus.NOT_FOUND,request);
+    }
+
+    @org.springframework.web.bind.annotation.ExceptionHandler({PessoaNotExistOrNotValidException.class })
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseEntity<Object> handlePessoaNotExistOrNotValidException(PessoaNotExistOrNotValidException exception,WebRequest request){
+
+        String messageUser = messageSource.getMessage("inativo.inexistente",null,LocaleContextHolder.getLocale());
+        String messageDev = exception.toString();
+
+        List<ExceptionErrorMessage> error = Arrays.asList(new ExceptionErrorMessage(messageUser,messageDev));
+        return handleExceptionInternal(exception,error,new HttpHeaders(),HttpStatus.BAD_REQUEST,request);
     }
     private List<ExceptionErrorMessage> createListError(BindingResult bindingResult) {
         List<ExceptionErrorMessage> error = new ArrayList<>();

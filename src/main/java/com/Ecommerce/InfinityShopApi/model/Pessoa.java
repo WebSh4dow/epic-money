@@ -1,5 +1,6 @@
 package com.Ecommerce.InfinityShopApi.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -23,4 +24,9 @@ public class Pessoa {
     private Boolean ativo;
     @Embedded
     private Endereco endereco;
+    @JsonIgnore
+    @Transient
+    public boolean isInativo(){
+        return !this.ativo;
+    }
 }

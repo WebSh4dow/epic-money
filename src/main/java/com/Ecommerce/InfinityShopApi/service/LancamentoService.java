@@ -3,7 +3,9 @@ package com.Ecommerce.InfinityShopApi.service;
 import com.Ecommerce.InfinityShopApi.Event.RecursoCriadoEvent;
 import com.Ecommerce.InfinityShopApi.model.Lancamento;
 import com.Ecommerce.InfinityShopApi.model.Pessoa;
+import com.Ecommerce.InfinityShopApi.ExceptionsService.PessoaNotExistOrNotValidException;
 import com.Ecommerce.InfinityShopApi.repository.LancamentoRepository;
+import com.Ecommerce.InfinityShopApi.repository.PessoaRepository;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
@@ -14,12 +16,15 @@ import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class LancamentoService {
     @Autowired
     private LancamentoRepository lancamentoRepository;
 
+    @Autowired
+    private PessoaRepository pessoaRepository;
     @Autowired
     private ApplicationEventPublisher eventPublisher;
 
@@ -34,10 +39,25 @@ public class LancamentoService {
                (lancamento):ResponseEntity.notFound().build();
     }
     public ResponseEntity <Lancamento> create(Lancamento lancamento, HttpServletResponse response){
-        Lancamento salvarLancamento = lancamentoRepository.save(lancamento);
+        Lancamento salvarLancamento = validarLancamentoAndSave(lancamento);
         eventPublisher.publishEvent(new RecursoCriadoEvent(this,response, salvarLancamento.getId()));
         return ResponseEntity.status(HttpStatus.CREATED).body(salvarLancamento);
     }
+    protected Lancamento validarLancamentoAndSave(Lancamento lancamento){
+        Pessoa pessoa = null;
+
+        if (lancamento.getPessoa().getId()!=null){
+           pessoa = pessoaRepository.findById(lancamento.getPessoa().getId()).get();
+        }
+
+        if (pessoa == null || pessoa.isInativo()){
+            throw new PessoaNotExistOrNotValidException();
+        }
+        return lancamentoRepository.save(lancamento);
+    }
+
+
+
     public Lancamento update(Long id, Lancamento lancamento){
        Lancamento updatePessoa= lancamentoRepository.findById(id).get();
        if (updatePessoa == null){
