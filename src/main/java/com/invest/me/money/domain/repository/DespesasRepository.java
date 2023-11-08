@@ -1,11 +1,8 @@
 package com.invest.me.money.domain.repository;
 
 import com.invest.me.money.domain.model.Despesas;
-import java.util.List;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface DespesasRepository {
-    List<Despesas> listar();
-    Despesas incluir();
-    Despesas porCodigo(Long codigo);
-    void remover(Despesas despesas);
+public interface DespesasRepository extends JpaRepository<Despesas,Long> {
+
 }

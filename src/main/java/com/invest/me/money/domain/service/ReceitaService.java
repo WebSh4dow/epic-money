@@ -1,25 +1,27 @@
 package com.invest.me.money.domain.service;
 
-
-import com.invest.me.money.domain.dto.ReceitasDTO;
+import com.invest.me.money.domain.represetation.ReceitasModel;
 import com.invest.me.money.domain.model.Receitas;
 import com.invest.me.money.domain.model.TiposReceitas;
 import com.invest.me.money.domain.repository.ReceitasRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import jakarta.persistence.TypedQuery;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import jakarta.transaction.Transactional;
+import jakarta.persistence.TypedQuery;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import java.util.List;
 import java.util.stream.Collectors;
 
 
 @Component
-public class ReceitaService implements ReceitasRepository {
+public class ReceitaService {
+
+    @Autowired
+    private ReceitasRepository receitasRepository;
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -31,25 +33,13 @@ public class ReceitaService implements ReceitasRepository {
     private ModelMapper modelMapper;
 
     private final static Logger LOGGER = LoggerFactory.getLogger(ReceitaService.class);
-    @Override
-    public List<Receitas> listar(){
-        return entityManager.createQuery("from Receitas", Receitas.class).getResultList();
 
+
+    public List<Receitas> listar() {
+        return receitasRepository.findAll();
     }
 
-    @Override
-    public List<ReceitasDTO> listarDto() {
-        TypedQuery<Receitas> query = entityManager.createQuery("SELECT r FROM Receitas r", Receitas.class);
-        List<Receitas> receitasList = query.getResultList();
 
-        List<ReceitasDTO> receitasDtoList = receitasList.stream()
-                .map(receita -> modelMapper.map(receita, ReceitasDTO.class))
-                .collect(Collectors.toList());
-
-        return receitasDtoList;
-    }
-
-    @Override
     @Transactional
     public void remover(Receitas receitas) {
         if (receitas.getCodigo() != null){
@@ -59,13 +49,13 @@ public class ReceitaService implements ReceitasRepository {
         }
     }
 
-    @Override
+
     @Transactional
     public Receitas incluir(Receitas receitas) {
         return entityManager.merge(receitas);
     }
 
-    @Override
+
     public Receitas porCodigo(Long codigo) {
         return entityManager.find(Receitas.class,codigo);
     }
@@ -79,9 +69,7 @@ public class ReceitaService implements ReceitasRepository {
     @Transactional
     public void associarTiposReceitas(Long receitaCodigo, Long tipoReceitaCodigo) {
         Receitas receitas = porCodigo(receitaCodigo);
-        System.out.println(receitas.getCategoria());
         TiposReceitas tiposReceitas = tipoReceitaService.porCodigo(tipoReceitaCodigo);
-        System.out.println(tiposReceitas.getDescricao());
         receitas.adicionarReceitas(tiposReceitas);
     }
 
