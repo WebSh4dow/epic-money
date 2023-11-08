@@ -1,6 +1,7 @@
 package com.invest.me.money.api.v1.controller;
 
-import com.invest.me.money.domain.dto.ReceitasDTO;
+import com.invest.me.money.api.v1.assembler.ReceitaAssembler;
+import com.invest.me.money.domain.represetation.ReceitasModel;
 import com.invest.me.money.domain.model.Receitas;
 import com.invest.me.money.domain.service.ReceitaService;
 import org.springframework.beans.BeanUtils;
@@ -9,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @RestController
@@ -17,9 +19,15 @@ public class ReceitasController {
     @Autowired
     private ReceitaService receitaService;
 
+    @Autowired
+    private ReceitaAssembler receitaAssembler;
+
     @GetMapping("/listar")
-    public List<ReceitasDTO> listar(){
-        return receitaService.listarDto();
+    public List<ReceitasModel> listar(){
+        return receitaService.listar()
+                .stream()
+                .map(receitaAssembler::toModel)
+                .collect(Collectors.toList());
     }
 
     @PutMapping("/editar/{codigo}")
