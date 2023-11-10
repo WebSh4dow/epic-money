@@ -2,33 +2,17 @@ package com.invest.me.money.domain.service;
 
 import com.invest.me.money.domain.model.TiposReceitas;
 import com.invest.me.money.domain.repository.TipoReceitaRepository;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
-import org.springframework.stereotype.Component;
-import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
-@Component
-public class TipoReceitaService implements TipoReceitaRepository {
+@Service
+public class TipoReceitaService {
 
-    @PersistenceContext
-    private EntityManager entityManager;
-    @Override
-    public List<TiposReceitas> listar() {
-        return null;
-    }
+    @Autowired
+    private TipoReceitaRepository tipoReceitaRepository;
 
-    @Override
-    public void remover(TiposReceitas tiposReceitas) {
-
-    }
-
-    @Override
-    public TiposReceitas incluir(TiposReceitas tiposReceitas) {
-        return null;
-    }
-
-    @Override
     public TiposReceitas porCodigo(Long codigo) {
-        return entityManager.find(TiposReceitas.class,codigo);
+        return tipoReceitaRepository.findByCodigo(codigo);
     }
+
 }

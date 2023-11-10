@@ -1,14 +1,9 @@
 package com.invest.me.money.domain.repository;
 
-import com.invest.me.money.domain.model.Receitas;
 import com.invest.me.money.domain.model.TiposReceitas;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.List;
+public interface TipoReceitaRepository extends JpaRepository<TiposReceitas,Long> {
 
-public interface TipoReceitaRepository {
-    List<TiposReceitas> listar();
-    void remover(TiposReceitas tiposReceitas);
-    TiposReceitas incluir(TiposReceitas tiposReceitas);
-
-    TiposReceitas porCodigo(Long codigo);
+    TiposReceitas findByCodigo(Long codigo);
 }
