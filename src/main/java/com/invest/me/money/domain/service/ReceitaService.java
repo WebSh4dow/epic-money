@@ -23,9 +23,6 @@ public class ReceitaService {
     @Autowired
     private ReceitasRepository receitasRepository;
 
-    @PersistenceContext
-    private EntityManager entityManager;
-
     @Autowired
     private TipoReceitaService tipoReceitaService;
 
@@ -43,7 +40,7 @@ public class ReceitaService {
     @Transactional
     public void remover(Receitas receitas) {
         if (receitas.getCodigo() != null){
-            entityManager.remove(receitas);
+            receitasRepository.delete(receitas);
         } else {
             LOGGER.error("[LOGGER PARA O REMOVER]: " + "Não foi possivel remover a receita atual pois ela não existe ou ja foi removida......");
         }
@@ -52,13 +49,14 @@ public class ReceitaService {
 
     @Transactional
     public Receitas incluir(Receitas receitas) {
-        return entityManager.merge(receitas);
+        return receitasRepository.save(receitas);
     }
 
 
     public Receitas porCodigo(Long codigo) {
-        return entityManager.find(Receitas.class,codigo);
+        return receitasRepository.findById(codigo).get();
     }
+
     @Transactional
     public void desassociarTiposReceitas(Long codigoReceita, Long codigoTipoReceita) {
         Receitas receitas = porCodigo(codigoReceita);
@@ -66,6 +64,7 @@ public class ReceitaService {
         receitas.removerReceitas(tiposReceitas);
 
     }
+
     @Transactional
     public void associarTiposReceitas(Long receitaCodigo, Long tipoReceitaCodigo) {
         Receitas receitas = porCodigo(receitaCodigo);
