@@ -1,15 +1,19 @@
 package com.invest.me.money.api.v1.controller;
 
 import com.invest.me.money.api.v1.assembler.ReceitaAssembler;
+import com.invest.me.money.domain.exception.TipoReceitaException;
+import com.invest.me.money.domain.model.TiposReceitas;
 import com.invest.me.money.domain.represetation.ReceitasModel;
 import com.invest.me.money.domain.model.Receitas;
 import com.invest.me.money.domain.service.ReceitaService;
+import com.invest.me.money.domain.service.TipoReceitaService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 
@@ -18,9 +22,13 @@ import java.util.stream.Collectors;
 public class ReceitasController {
     @Autowired
     private ReceitaService receitaService;
+    @Autowired
+    private TipoReceitaService tiposReceitasService;
 
     @Autowired
     private ReceitaAssembler receitaAssembler;
+
+    private static final String MSG_TIPO_RECEITA_EM_USO = "Tipo de receita está em uso, primeiro deve desvincular o tipo de receitar para poder remover a receita";
 
     @GetMapping("/listar")
     public List<ReceitasModel> listar(){
@@ -42,11 +50,19 @@ public class ReceitasController {
 
             return ResponseEntity.notFound().build();
     }
-    @PutMapping("/remover/{codigo}")
+    @DeleteMapping("/remover/{codigo}")
     public void remover(Receitas receitas, @PathVariable Long codigo){
         Receitas pesquisarPorCodigoReceita = receitaService.porCodigo(codigo);
+
         if (pesquisarPorCodigoReceita != null){
-            receitaService.remover(receitas);
+            for (TiposReceitas tp: pesquisarPorCodigoReceita.getTipos() ){
+                TiposReceitas buscarPor = tiposReceitasService.porCodigo(tp.getCodigo());
+
+                if (Objects.equals(buscarPor.getCodigo(), tp.getCodigo())){
+                    throw new TipoReceitaException(MSG_TIPO_RECEITA_EM_USO);
+                }
+                receitaService.remover(receitas);
+            }
         }
     }
 
