@@ -41,6 +41,8 @@ public class ReceitaService {
     public void remover(Receitas receitas) {
         if (receitas.getCodigo() != null){
             receitasRepository.delete(receitas);
+            LOGGER.warn("[LOGGER PARA O REMOVER]: " + "Foi removido a receita atual.......");
+
         } else {
             LOGGER.error("[LOGGER PARA O REMOVER]: " + "Não foi possivel remover a receita atual pois ela não existe ou ja foi removida......");
         }
