@@ -1,23 +1,21 @@
 package com.invest.me.money.domain.model;
 
+import com.invest.me.money.domain.enums.TipoCentro;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-
-@Entity
 @Data
+@Entity
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-public class TiposReceitas {
+public class Centro {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @EqualsAndHashCode.Include
     private Long codigo;
 
-    private String tag;
+    private String descricao;
 
-    private String[] categorias;
-
-
+    @Enumerated(EnumType.STRING)
+    private TipoCentro tipoCentro;
 }
