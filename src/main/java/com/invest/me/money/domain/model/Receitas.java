@@ -19,7 +19,7 @@ public class Receitas {
     private Long codigo;
 
     @NotNull
-    private String categoria;
+    private String descricao;
 
     @ManyToMany
     @JsonIgnore

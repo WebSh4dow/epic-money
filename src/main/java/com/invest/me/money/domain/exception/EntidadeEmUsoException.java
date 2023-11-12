@@ -4,9 +4,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(HttpStatus.BAD_REQUEST)
-public class TipoReceitaException extends RuntimeException{
+public class EntidadeEmUsoException extends RuntimeException{
 
-    public TipoReceitaException(String message) {
+    public EntidadeEmUsoException(String message) {
         super(message);
     }
 }

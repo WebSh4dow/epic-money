@@ -1,21 +1,19 @@
 package com.invest.me.money.domain.service;
 
-import com.invest.me.money.domain.represetation.ReceitasModel;
+import com.invest.me.money.domain.exception.EntidadeEmUsoException;
+import com.invest.me.money.domain.exception.EntidadeNaoEncontradaException;
 import com.invest.me.money.domain.model.Receitas;
 import com.invest.me.money.domain.model.TiposReceitas;
 import com.invest.me.money.domain.repository.ReceitasRepository;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Component;
 import jakarta.transaction.Transactional;
-import jakarta.persistence.TypedQuery;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import java.util.List;
-import java.util.stream.Collectors;
-
+import java.util.*;
 
 @Component
 public class ReceitaService {
@@ -31,29 +29,45 @@ public class ReceitaService {
 
     private final static Logger LOGGER = LoggerFactory.getLogger(ReceitaService.class);
 
+    private static final String MSG_NAO_ENCONTRADA = "Não foi possivel encontrar a receita acessado pelo recurso atual: ";
+
+    private static final String MSG_RECEITA_EM_USO = "Não foi possivel excluir a receita atual pois existe um ou mais tipos de receitas vinculados";
 
     public List<Receitas> listar() {
         return receitasRepository.findAll();
     }
 
-
     @Transactional
     public void remover(Receitas receitas) {
-        if (receitas.getCodigo() != null){
+        try {
             receitasRepository.delete(receitas);
-            LOGGER.warn("[LOGGER PARA O REMOVER]: " + "Foi removido a receita atual.......");
+        }catch (EmptyResultDataAccessException | NoSuchElementException e){
+            throw new EntidadeNaoEncontradaException(MSG_NAO_ENCONTRADA);
 
-        } else {
-            LOGGER.error("[LOGGER PARA O REMOVER]: " + "Não foi possivel remover a receita atual pois ela não existe ou ja foi removida......");
+        }catch (DataIntegrityViolationException e){
+            throw new EntidadeEmUsoException(MSG_RECEITA_EM_USO);
         }
     }
 
-
     @Transactional
     public Receitas incluir(Receitas receitas) {
+
+        receitas.getTipos().forEach(tiposReceitas -> {
+            Long tipoReceitasId = tiposReceitas.getCodigo();
+            TiposReceitas tipoReceitapesquisada = tipoReceitaService.porCodigo(tipoReceitasId);
+
+            if (tipoReceitapesquisada == null){
+                throw new EntidadeNaoEncontradaException("Não existe um cadastro de tipo de receitas com codigo: "+ tipoReceitasId);
+            }
+
+            Set<TiposReceitas> adicionarTipos = new HashSet<>();
+            adicionarTipos.add(tipoReceitapesquisada);
+            
+            receitas.setTipos(adicionarTipos);
+        });
+
         return receitasRepository.save(receitas);
     }
-
 
     public Receitas porCodigo(Long codigo) {
         return receitasRepository.findById(codigo).get();

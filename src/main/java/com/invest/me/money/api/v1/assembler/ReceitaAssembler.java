@@ -13,7 +13,7 @@ public class ReceitaAssembler {
         ReceitasModel receitasModel = new ReceitasModel();
         List<TiposReceitas> tiposReceitas = new ArrayList<>();
 
-        receitasModel.setCategoria(receitas.getCategoria());
+        receitasModel.setCategoria(receitas.getDescricao());
         tiposReceitas.addAll(receitas.getTipos());
 
         receitasModel.setCodigo(receitas.getCodigo());
@@ -24,7 +24,7 @@ public class ReceitaAssembler {
 
     public List<ReceitasModel> toCollectionModel(List<Receitas> receitas){
         return receitas.stream()
-                .map(rc ->toModel(rc))
+                .map(this::toModel)
                 .collect(Collectors.toList());
     }
 
