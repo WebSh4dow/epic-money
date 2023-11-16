@@ -45,7 +45,7 @@ public class ReceitasController {
 
         if (receitaAtual != null) {
             BeanUtils.copyProperties(receitas, receitaAtual, "codigo", "tipos");
-            receitaService.incluir(receitas);
+            receitaAtual = receitaService.incluir(receitaAtual);
             return ResponseEntity.ok().body(receitaAtual);
         }
 
@@ -82,16 +82,13 @@ public class ReceitasController {
         return new ResponseEntity<Receitas>(receitaService.incluir(receitas), HttpStatus.CREATED);
     }
 
-    @PutMapping("/pesquisar-por/{codigo}")
-    public ResponseEntity<Receitas> pesquisarPor(@RequestBody Receitas receitas, @PathVariable Long codigo) {
-        Receitas pesquisarPorCodigoReceita = receitaService.porCodigo(codigo);
+    @GetMapping("/pesquisar-por/{codigo}")
+    public ResponseEntity<Receitas> pesquisarPor(@PathVariable Long codigo) {
+        Receitas receitaAtual = receitaService.porCodigo(codigo);
 
-        if (pesquisarPorCodigoReceita.getCodigo() != null) {
-            receitaService.incluir(receitas);
-            return new ResponseEntity<Receitas>(receitas, HttpStatus.CREATED);
+        if (receitaAtual != null) {
+            return ResponseEntity.ok().body(receitaAtual);
         }
         return ResponseEntity.notFound().build();
     }
-
-
 }

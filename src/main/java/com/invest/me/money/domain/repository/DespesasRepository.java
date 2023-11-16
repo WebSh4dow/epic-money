@@ -4,5 +4,5 @@ import com.invest.me.money.domain.model.Despesas;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface DespesasRepository extends JpaRepository<Despesas,Long> {
-
+    Despesas findByCodigo(Long codigo);
 }

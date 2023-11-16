@@ -30,7 +30,7 @@ public class TiposReceitasController {
     private ReceitaAssembler receitaAssembler;
 
     @GetMapping("/listar/{tipoReceitaCodigo}")
-    public ResponseEntity<List<ReceitasModel>> listarPor(@PathVariable Long tipoReceitaCodigo){
+    public ResponseEntity<List<ReceitasModel>> listarPor(@PathVariable Long tipoReceitaCodigo) {
         Receitas receitas = receitaService.porCodigo(tipoReceitaCodigo);
         if (receitas != null){
             return ResponseEntity.ok().body(receitaService.listar()
@@ -41,7 +41,7 @@ public class TiposReceitasController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<?> adicionar(@RequestBody TiposReceitas tiposReceitas){
+    public ResponseEntity<?> adicionar(@RequestBody TiposReceitas tiposReceitas) {
         try {
              tiposReceitas = tipoReceitaService.adicionar(tiposReceitas);
 
@@ -59,7 +59,7 @@ public class TiposReceitasController {
         try {
             TiposReceitas tipoReceitaAtual = tipoReceitaService.porCodigo(tipoReceitaCodigo);
             if (tipoReceitaAtual != null) {
-                BeanUtils.copyProperties(tiposReceitas, tipoReceitaAtual, "id");
+                BeanUtils.copyProperties(tiposReceitas, tipoReceitaAtual, "codigo");
                 tipoReceitaAtual = tipoReceitaService.adicionar(tipoReceitaAtual);
 
                 return ResponseEntity.ok().body(tipoReceitaAtual);
@@ -73,7 +73,7 @@ public class TiposReceitasController {
     }
 
     @DeleteMapping("/{tipoReceitaCodigo}")
-    public ResponseEntity<?> remover(@PathVariable Long tipoReceitaCodigo){
+    public ResponseEntity<?> remover(@PathVariable Long tipoReceitaCodigo) {
         try {
             TiposReceitas tiposReceitas = tipoReceitaService.porCodigo(tipoReceitaCodigo);
             tipoReceitaService.remover(tiposReceitas);
