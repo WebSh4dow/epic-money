@@ -97,5 +97,4 @@ public class TiposReceitasController {
     public void associar(@PathVariable Long receitaCodigo, @PathVariable Long tipoReceitaCodigo) {
         receitaService.associarTiposReceitas(receitaCodigo, tipoReceitaCodigo);
     }
-
 }

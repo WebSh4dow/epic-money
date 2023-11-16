@@ -31,6 +31,7 @@ public class DespesasController {
     @Autowired
     private DespesaAssembler despesaAssembler;
 
+
     private static final String MSG_TIPO_DESPESA_EM_USO = "Tipo de despesa está em uso, primeiro deve desvincular o tipo de despesa de código: ";
 
 
@@ -94,5 +95,4 @@ public class DespesasController {
         }
         return ResponseEntity.notFound().build();
     }
-
 }

@@ -83,5 +83,4 @@ public class ReceitaService {
         TiposReceitas tiposReceitas = tipoReceitaService.porCodigo(tipoReceitaCodigo);
         receitas.adicionarReceitas(tiposReceitas);
     }
-
 }

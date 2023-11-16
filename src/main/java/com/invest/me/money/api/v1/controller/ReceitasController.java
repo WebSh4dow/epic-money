@@ -18,17 +18,19 @@ import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-
 @RestController
 @RequestMapping("/receitas")
 public class ReceitasController {
+
     @Autowired
     private ReceitaService receitaService;
+
     @Autowired
     private TipoReceitaService tiposReceitasService;
 
     @Autowired
     private ReceitaAssembler receitaAssembler;
+
     private static final String MSG_TIPO_RECEITA_EM_USO = "Tipo de receita está em uso, primeiro deve desvincular o tipo de receita de código: ";
 
     @GetMapping("/listar")

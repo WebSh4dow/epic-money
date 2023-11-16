@@ -4,10 +4,10 @@ import com.invest.me.money.domain.model.Despesas;
 import com.invest.me.money.domain.model.TiposDespesas;
 import com.invest.me.money.domain.represetation.DespesaModel;
 import org.springframework.stereotype.Component;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+
 @Component
 public class DespesaAssembler {
 

@@ -96,5 +96,4 @@ public class DespesaService {
             throw new EntidadeNaoEncontradaException(MSG_NAO_ENCONTRADA);
         }
     }
-
 }

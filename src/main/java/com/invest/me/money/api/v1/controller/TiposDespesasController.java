@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
-
 @RestController
 @RequestMapping("/despesas-categorias/tipo-despesa")
 public class TiposDespesasController {
@@ -153,5 +152,4 @@ public class TiposDespesasController {
 
         return ResponseEntity.ok().body(responseEntityMessage);
     }
-
 }

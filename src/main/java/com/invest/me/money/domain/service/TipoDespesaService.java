@@ -14,6 +14,7 @@ import java.util.NoSuchElementException;
 
 @Service
 public class TipoDespesaService {
+
     @Autowired
     private TipoDespesaRepository tipoDespesaRepository;
 
@@ -46,5 +47,4 @@ public class TipoDespesaService {
     public TiposDespesas adicionar(TiposDespesas tiposDespesas) {
         return tipoDespesaRepository.save(tiposDespesas);
     }
-
 }
