@@ -11,8 +11,6 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Component;
 import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import java.util.*;
 
 @Component
@@ -26,8 +24,6 @@ public class ReceitaService {
 
     @Autowired
     private ModelMapper modelMapper;
-
-    private final static Logger LOGGER = LoggerFactory.getLogger(ReceitaService.class);
 
     private static final String MSG_NAO_ENCONTRADA = "Não foi possivel encontrar a receita acessado pelo recurso atual: ";
 
@@ -53,11 +49,11 @@ public class ReceitaService {
     public Receitas incluir(Receitas receitas) {
 
         receitas.getTipos().forEach(tiposReceitas -> {
-            Long tipoReceitasId = tiposReceitas.getCodigo();
-            TiposReceitas tipoReceitapesquisada = tipoReceitaService.porCodigo(tipoReceitasId);
+            Long tiposReceitasCodigo = tiposReceitas.getCodigo();
+            TiposReceitas tipoReceitapesquisada = tipoReceitaService.porCodigo(tiposReceitasCodigo);
 
             if (tipoReceitapesquisada == null){
-                throw new EntidadeNaoEncontradaException("Não existe um cadastro de tipo de receitas com codigo: "+ tipoReceitasId);
+                throw new EntidadeNaoEncontradaException("Não existe um cadastro de tipo de receitas com codigo: "+ tiposReceitasCodigo);
             }
 
             Set<TiposReceitas> adicionarTipos = new HashSet<>();
@@ -87,5 +83,4 @@ public class ReceitaService {
         TiposReceitas tiposReceitas = tipoReceitaService.porCodigo(tipoReceitaCodigo);
         receitas.adicionarReceitas(tiposReceitas);
     }
-
 }

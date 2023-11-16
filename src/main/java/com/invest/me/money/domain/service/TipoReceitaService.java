@@ -27,5 +27,4 @@ public class TipoReceitaService {
     public void remover(TiposReceitas tiposReceitas){
          tipoReceitaRepository.delete(tiposReceitas);
     }
-
 }

@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 
 @Component
 public class ReceitaAssembler {
+
     public ReceitasModel toModel(Receitas receitas) {
         ReceitasModel receitasModel = new ReceitasModel();
         List<TiposReceitas> tiposReceitas = new ArrayList<>();
