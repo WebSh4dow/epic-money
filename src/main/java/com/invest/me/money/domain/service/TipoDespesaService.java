@@ -39,7 +39,7 @@ public class TipoDespesaService {
             throw new EntidadeEmUsoException(MSG_RECEITA_EM_USO);
 
         }catch (EmptyResultDataAccessException | NoSuchElementException e){
-            throw new EntidadeNaoEncontradaException(MSG_NAO_ENCONTRADA);
+            throw new EntidadeNaoEncontradaException(MSG_NAO_ENCONTRADA + codigo);
         }
     }
 

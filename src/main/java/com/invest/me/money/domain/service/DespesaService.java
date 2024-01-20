@@ -90,10 +90,13 @@ public class DespesaService {
             Despesas despesas = porCodigo(codigoDespesa);
             TiposDespesas tiposDespesas = tipoDespesaService.porCodigo(codigoTipoDespesa);
 
+            if (despesas == null) {
+                throw new EntidadeNaoEncontradaException("Não foi possivel encontrar a despesa atual com código: " + codigoDespesa);
+            }
             despesas.adicionarReceitas(tiposDespesas);
 
         } catch (EntidadeNaoEncontradaException | EmptyResultDataAccessException e) {
-            throw new EntidadeNaoEncontradaException(MSG_NAO_ENCONTRADA);
+            throw new EntidadeNaoEncontradaException(MSG_NAO_ENCONTRADA + codigoDespesa);
         }
     }
 }

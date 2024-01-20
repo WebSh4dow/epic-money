@@ -138,18 +138,23 @@ public class TiposDespesasController {
     @PutMapping("/associar/{despesaCodigo}/{tipoDespesaCodigo}")
     public ResponseEntity<?> associar(@PathVariable Long despesaCodigo, @PathVariable Long tipoDespesaCodigo) {
 
-        Despesas despesaAtual = despesaService.porCodigo(despesaCodigo);
-        TiposDespesas tiposDespesasAtual = tipoDespesaService.porCodigo(tipoDespesaCodigo);
+      try {
+          Despesas despesaAtual = despesaService.porCodigo(despesaCodigo);
+          TiposDespesas tiposDespesasAtual = tipoDespesaService.porCodigo(tipoDespesaCodigo);
 
-        if (despesaAtual == null || tiposDespesasAtual == null) {
-            ResponseEntity.notFound().build();
-        }
+          if (despesaAtual == null || tiposDespesasAtual == null) {
+              ResponseEntity.notFound().build();
+          }
 
-        despesaService.associarTiposDespesas(despesaCodigo, tipoDespesaCodigo);
+          despesaService.associarTiposDespesas(despesaCodigo, tipoDespesaCodigo);
 
-        Set<String> responseEntityMessage = new HashSet<>();
-        responseEntityMessage.add("A associação de tipos de despesas foi realizada com sucesso!!!!");
+          Set<String> responseEntityMessage = new HashSet<>();
+          responseEntityMessage.add("A associação de tipos de despesas foi realizada com sucesso!!!!");
 
-        return ResponseEntity.ok().body(responseEntityMessage);
+          return ResponseEntity.ok().body(responseEntityMessage);
+
+      } catch (EntidadeNaoEncontradaException e) {
+          return ResponseEntity.badRequest().body(e.getMessage());
+      }
     }
 }
