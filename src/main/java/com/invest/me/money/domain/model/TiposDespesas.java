@@ -1,11 +1,10 @@
 package com.invest.me.money.domain.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+
+import java.util.List;
 
 @Entity
 @Data
@@ -19,6 +18,12 @@ public class TiposDespesas {
 
     private String tag;
 
-    private String[] categorias;
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "tipos_despesas_categorias",
+            joinColumns = @JoinColumn(name = "tipo_despesas_codigo"),
+            inverseJoinColumns = @JoinColumn(name = "categoria_id")
+    )
+    private List<Categorias> categorias;
 
 }

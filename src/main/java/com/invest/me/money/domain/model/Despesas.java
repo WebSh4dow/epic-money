@@ -5,7 +5,10 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -26,7 +29,7 @@ public class Despesas {
     @JoinTable(name = "despesas_tipos",
             joinColumns = @JoinColumn(name = "despesas_codigo"),
             inverseJoinColumns = @JoinColumn(name = "tipos_despesas_codigo"))
-    private Set<TiposDespesas> tipos = new HashSet<>();
+    private List<TiposDespesas> tipos = new ArrayList<>();
 
     public boolean removerReceitas(TiposDespesas tiposDespesas) {
         return getTipos().remove(tiposDespesas);

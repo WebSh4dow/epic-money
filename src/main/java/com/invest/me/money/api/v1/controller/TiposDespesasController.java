@@ -4,17 +4,18 @@ import com.invest.me.money.api.v1.assembler.DespesaAssembler;
 import com.invest.me.money.domain.exception.EntidadeNaoEncontradaException;
 import com.invest.me.money.domain.model.Despesas;
 import com.invest.me.money.domain.model.TiposDespesas;
+import com.invest.me.money.domain.repository.DespesasRepository;
 import com.invest.me.money.domain.represetation.DespesaModel;
 import com.invest.me.money.domain.service.DespesaService;
 import com.invest.me.money.domain.service.TipoDespesaService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/despesas-categorias/tipo-despesa")
@@ -27,27 +28,28 @@ public class TiposDespesasController {
     private DespesaService despesaService;
 
     @Autowired
+    private DespesasRepository despesasRepository;
+
+    @Autowired
     private DespesaAssembler despesaAssembler;
 
     private static final String MSG_DESPESA_EM_USO = "Não foi possivel excluir o tipo despesa atual pois existe um ou mais despesas vinculadas a esse tipo.";
 
     @GetMapping("/listar-por/{tipoDespesaCodigo}")
-    public ResponseEntity<List<DespesaModel>> listarPor(@PathVariable Long tipoDespesaCodigo) {
-        Despesas despesas = despesaService.porCodigo(tipoDespesaCodigo);
+    public ResponseEntity<CollectionModel<DespesaModel>> listarPor(@PathVariable Long tipoDespesaCodigo) {
 
-        if (despesas != null) {
-            return ResponseEntity.ok().body(despesaService.listar()
-                    .stream().map(despesaAssembler::toModel).collect(Collectors.toList()));
-        }
-
-        return ResponseEntity.notFound().build();
+        List<Despesas> buscarTipoDespesasVinculada = despesasRepository.despesasPorTipo(tipoDespesaCodigo);
+        return new ResponseEntity<>(
+                despesaAssembler.toCollectionModel(buscarTipoDespesasVinculada),
+                HttpStatus.OK
+        );
     }
 
     @GetMapping("/listar-todos")
     public ResponseEntity<?> listar() {
         List<DespesaModel> despesasModelList= despesaService.listar().stream().map(despesaAssembler::toModel).toList();
 
-        if (despesasModelList.isEmpty()){
+        if (despesasModelList.isEmpty()) {
             Set<String> responseEntityMessage = new HashSet<>();
             responseEntityMessage.add("Atualmente não exite nenhuma despesa cadastrada no sistema");
 
