@@ -3,6 +3,7 @@ package com.invest.me.money.api.v1.controller;
 import com.invest.me.money.api.v1.assembler.DespesaAssembler;
 import com.invest.me.money.domain.model.Despesas;
 import com.invest.me.money.domain.model.TiposDespesas;
+import com.invest.me.money.domain.repository.DespesasRepository;
 import com.invest.me.money.domain.represetation.DespesaModel;
 import com.invest.me.money.domain.service.DespesaService;
 import com.invest.me.money.domain.service.TipoDespesaService;
@@ -10,6 +11,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -26,6 +28,9 @@ public class DespesasController {
     private DespesaService despesaService;
 
     @Autowired
+    private DespesasRepository despesasRepository;
+
+    @Autowired
     private TipoDespesaService tipoDespesaService;
 
     @Autowired
@@ -34,13 +39,12 @@ public class DespesasController {
 
     private static final String MSG_TIPO_DESPESA_EM_USO = "Tipo de despesa está em uso, primeiro deve desvincular o tipo de despesa de código: ";
 
-
     @GetMapping("/listar")
-    public List<DespesaModel> listar() {
-        return despesaService.listar()
-                .stream()
-                .map(despesaAssembler::toModel)
-                .collect(Collectors.toList());
+    public ResponseEntity<CollectionModel<DespesaModel>> listar() {
+        List<Despesas> despesas = despesaService.listar();
+        return new ResponseEntity<>(
+                despesaAssembler.toCollectionModel(despesas), HttpStatus.OK
+        );
     }
 
     @PutMapping("/editar/{codigo}")
@@ -87,12 +91,11 @@ public class DespesasController {
     }
 
     @GetMapping("/pesquisar-por/{codigo}")
-    public ResponseEntity<Despesas> pesquisarPor(@PathVariable Long codigo) {
-        Despesas despesasAtuais = despesaService.porCodigo(codigo);
+    public ResponseEntity<DespesaModel> pesquisarPor(@PathVariable Long codigo) {
 
-        if (despesasAtuais != null) {
-            return ResponseEntity.ok().body(despesasAtuais);
-        }
-        return ResponseEntity.notFound().build();
+        return despesasRepository.findById(codigo)
+                .map(despesaAssembler::toModel)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 }

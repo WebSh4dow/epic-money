@@ -10,10 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
-import java.util.HashSet;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Set;
+
+import java.util.*;
 
 @Service
 public class DespesaService {
@@ -47,7 +45,7 @@ public class DespesaService {
                 throw new EntidadeNaoEncontradaException("Não existe um cadastro de tipo de despesa com codigo: "+ tipoDespesaCodigo);
             }
 
-            Set<TiposDespesas> adicionarTipos = new HashSet<>();
+            List<TiposDespesas> adicionarTipos = new ArrayList<>();
             adicionarTipos.add(tiposDespesasPesquisadaAtual);
 
             despesas.setTipos(adicionarTipos);
